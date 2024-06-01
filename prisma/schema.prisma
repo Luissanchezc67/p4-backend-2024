@@ -9,3 +9,66 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model Pacient {
+  pacientId Int @id @default(autoincrement())//el id de la tabla paciente AUTOINCREMENTA el contador
+  pacient String
+  address String
+  phonenum String
+  DNIPass String @unique
+  edad String
+  gender String
+  record String
+
+  clinichist ClinicHistory[]
+}
+
+model ClinicHistory{
+  clinichistId Int @id @default(autoincrement()) //el id de la tabla historiaclinica
+  date DateTime @default(now())
+
+  pacientId Int
+  pacient Pacient @relation(fields: [pacientId], references: [pacientId])
+
+  doctorId Int
+  doctor Doctor @relation(fields: [doctorId],references: [doctorId])
+
+  serviceId Int
+  service Services @relation(fields: [serviceId], references: [serviceId])
+
+  detail detailPacient[]
+
+}
+
+model Doctor{
+  doctorId Int @id @default(autoincrement())
+  firstname String
+  lastname String
+  phone String
+  specialty String
+
+  clinichist ClinicHistory[]
+}
+
+model Services {
+  serviceId Int @id @default(autoincrement())
+  service String @unique
+  description String
+  price String
+
+  clinichist ClinicHistory[]
+  detail detailPacient[]
+}
+
+model detailPacient {
+  detailpacientId Int @id @default(autoincrement())
+  payment String
+  state String
+
+  serviceId Int
+  service Services @relation(fields: [serviceId], references: [serviceId])
+
+  clinichistId Int
+  clinichist ClinicHistory @relation(fields: [clinichistId], references: [clinichistId])
+
+}
